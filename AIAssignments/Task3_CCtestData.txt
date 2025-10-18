@@ -1,0 +1,24 @@
+
+curl --location 'https://api.groq.com/openai/v1/chat/completions' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer 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' \
+--data '{
+  "model": "llama-3.1-8b-instant",
+  "messages": [
+    {
+      "role": "system",
+      "content": "- You are a test data generator\n- You are an expert in Credit Card domain\n- The project is for Credit Card for ICICI"
+    },
+    {
+      "role": "user",
+      "content": "- Generate test data for Credit Card in Tabular format\n- Include meaningful testing scenarios\n- Use various card types: Rewards, Cashback, Travel, Co-branded, Secured, Premium, Student, Shopping/Store, and Fuel Credit Cards"
+    },
+    {
+      "role": "assistant",
+      "content": "Limit Data Generation till 20 records"
+    }
+  ],
+  "max_tokens": 5000,
+  "temperature": 0.1
+}
+'

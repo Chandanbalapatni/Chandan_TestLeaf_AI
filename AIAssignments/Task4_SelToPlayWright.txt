@@ -1,0 +1,133 @@
+
+Instruction
+- Convert Selenium Java Script into Playwright typescript code
+- Follow latest version for Playwright v1.55.0
+- Do not include Delays
+- Convert the Selenium Java code exactly into equivalent Playwright TypeScript code — keeping logic, flow, and test validation identical
+- Use TypeScript best practices, including:
+	-Clean structure and indentation
+	-Minimal, self-explanatory comments
+	-Consistent use of const and await
+	-Avoid unnecessary verbosity or repeated selectors
+- Keep the script neat, concise, and production-ready.
+- Output only the Playwright TypeScript code.
+
+Context
+- You are an AI Assistant to convert Selenium Java Code into Playwright
+- You are expert in Automation Testing
+
+Example
+
+Input Selenium Java Code to be generated in playwright-
+public class FacebookLoginTest {
+
+    WebDriver driver;
+    WebDriverWait wait;
+
+    @BeforeClass
+    public void setUp() {
+        // Initialize ChromeDriver
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    }
+
+    @Test(priority = 1)
+    public void verifySuccessfulLogin() {
+        // Navigate to Facebook
+        driver.get("https://www.facebook.com/");
+
+        // Wait for email input and enter value
+        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//input[@name='email']")));
+        emailField.clear();
+        emailField.sendKeys("your_email@example.com");
+
+        // Wait for password input and enter value
+        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//input[@name='pass']")));
+        passwordField.clear();
+        passwordField.sendKeys("your_password");
+
+        // Click login button
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//button[@name='login']")));
+        loginButton.click();
+
+        // Wait for possible redirection or error
+        wait.until(ExpectedConditions.or(
+                ExpectedConditions.urlContains("facebook.com/?"),
+                ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(),'Find friends')]")),
+                ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(),'incorrect')]"))
+        ));
+
+        // Check login success by URL
+        boolean isLoggedIn = driver.getCurrentUrl().contains("facebook.com/?");
+        System.out.println(isLoggedIn ? "✅ Login Successful!" : "❌ Login Failed!");
+
+        Assert.assertTrue(isLoggedIn, "Login failed. Please verify credentials or selectors.");
+    }
+
+    @Test(priority = 2)
+    public void verifyInvalidLogin() {
+        driver.get("https://www.facebook.com/");
+
+        WebElement emailField = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//input[@name='email']")));
+        emailField.clear();
+        emailField.sendKeys("invalid_email@example.com");
+
+        WebElement passwordField = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//input[@name='pass']")));
+        passwordField.clear();
+        passwordField.sendKeys("wrongpassword");
+
+        WebElement loginButton = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//button[@name='login']")));
+        loginButton.click();
+
+        // Wait for error message
+        WebElement errorMsg = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[contains(text(),'The email or mobile number you entered isn’t connected')]")));
+
+        Assert.assertTrue(errorMsg.isDisplayed(), "Error message not displayed for invalid login.");
+        System.out.println("✅ Invalid login test passed!");
+    }
+
+    @AfterClass
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+}
+
+Playwright Code reference :
+import { test, expect } from '@playwright/test';
+
+test('Facebook Signup Form - Enter Name and Click Sign Up', async ({ page }) => {
+  // Navigate to Facebook signup page
+  await page.goto('https://m.facebook.com/reg/');
+
+  // Wait for first name input and enter name
+  const firstName = page.locator('//input[@name="firstname"]');
+  await firstName.waitFor({ state: 'visible' });
+  await firstName.fill('John');
+
+  // Wait for surname input and enter last name
+  const lastName = page.locator('//input[@name="lastname"]');
+  await lastName.waitFor({ state: 'visible' });
+  await lastName.fill('Doe');
+
+  // Optionally, scroll into view of Sign Up button
+  const signUpButton = page.locator('//button[@name="websubmit"]');
+  await signUpButton.scrollIntoViewIfNeeded();
+
+  // Click on Sign Up button
+  await signUpButton.click();
+
+  // Verify navigation or form error presence (example)
+  await expect(page).toHaveURL(/facebook\.com/);
+});
+
+

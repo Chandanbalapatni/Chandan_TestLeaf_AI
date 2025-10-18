@@ -1,0 +1,8 @@
+curl --location 'https://api.groq.com/openai/v1/audio/translations' \
+--header 'Authorization: bearer $GROQ_API_KEY' \
+--form 'file=@"AIAssignments\MyAudio.ogg"' \
+--form 'model="whisper-large-v3"' \
+--form 'prompt="Specify context or spelling"' \
+--form 'language="en"' \
+--form 'temperature="0"' \
+--form 'response_format="json"'
